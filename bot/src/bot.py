@@ -29,10 +29,10 @@ class AbstractAhbapBot():
 
     
     def start(self):
-        '''
+        
         if len(self.replied_ids) == 0:
             exit()
-        '''
+        
         for submission in self.subreddit.stream.submissions():
             if not submission.id in self.replied_ids:
                 if submission.created > self.start_timestamp:
