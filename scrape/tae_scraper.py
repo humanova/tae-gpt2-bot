@@ -10,8 +10,6 @@ word_filters = [
     "/engelsiz",
     "/engel",
     "/un",
-    "sans",
-    "admin",
     "[sil",
     "[removed]",
     "[silindi]",
