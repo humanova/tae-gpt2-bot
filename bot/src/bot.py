@@ -13,7 +13,7 @@ class AbstractAhbapBot():
         self.reply_file = codecs.open("tae_generated_text.txt", "r", "utf-8")
         self.replied_ids_file = codecs.open("replied_ids.txt", "r", "utf-8")
 
-        self.replied_ids = [id.replace("\n", "") for in self.replied_ids_file.readlines()]
+        self.replied_ids = [id.replace("\n", "") for id in self.replied_ids_file.readlines()]
         self.replies = self.reply_file.readlines()
         
         self.replied_ids_file.close()
