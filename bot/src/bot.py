@@ -37,7 +37,12 @@ class AbstractAhbapBot():
             if not submission.id in self.replied_ids:
                 if submission.created > self.start_timestamp:
                     gen_text = self.find_reply(submission.title)
-                    submission.reply(gen_text)
+                    
+                    try:
+                        submission.reply(gen_text)
+                    except praw.exceptions.APIException:
+                        time.sleep(300)
+                        submission.reply(gen_text)
 
                     # logging stuff
                     self.add_to_replied(submission.id)
