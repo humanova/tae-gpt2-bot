@@ -42,8 +42,9 @@ class AbstractAhbapBot():
                     # logging stuff
                     self.add_to_replied(submission.id)
                     self.log_reply(submission, gen_text)
-                
-            time.sleep(3)
+                    
+                    time.sleep(900)
+            
 
 
     def find_reply(self, title):
