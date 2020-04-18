@@ -8,13 +8,17 @@ class AbstractAhbapBot():
     
     def __init__(self):
         self.sub = "tamamahbapengelli"
+        self.start_timestamp = 1586786823.0
         self.config = confparser.get("config.json")
         self.reply_file = codecs.open("tae_generated_text.txt", "r", "utf-8")
-        self.replied_ids_file = codecs.open("replied_ids.txt", "w+", "utf-8")
-        self.log_file = codecs.open("log.txt", "w+", "utf-8")
+        self.replied_ids_file = codecs.open("replied_ids.txt", "r", "utf-8")
 
         self.replied_ids = self.replied_ids_file.readlines()
-
+        self.replies = self.reply_file.readlines()
+        
+        self.replied_ids_file.close()
+        self.reply_file.close()
+        
         self.reddit = praw.Reddit(client_id=self.config.reddit_id,
                                     client_secret=self.config.reddit_secret,
                                     password=self.config.reddit_password,
@@ -30,26 +34,26 @@ class AbstractAhbapBot():
             exit()
         '''
         for submission in self.subreddit.stream.submissions():
-            if not submission.id in replied_ids:
-                gen_text = self.find_reply(submission.title)
-                submission.reply(gen_text)
+            if not submission.id in self.replied_ids:
+                if submission.created > self.start_timestamp:
+                    gen_text = self.find_reply(submission.title)
+                    submission.reply(gen_text)
+
+                    # logging stuff
+                    self.add_to_replied(submission.id)
+                    self.log_reply(submission, gen_text)
                 
-                # logging stuff
-                add_to_replied(submission.id)
-                log_reply(submission, gen_text)
-                
-            time.sleep(30)
+            time.sleep(3)
 
 
     def find_reply(self, title):
-        replies = self.reply_file.readlines()
-        keywords = title.lower().split(" ")
 
         # pick a related text 80%
         # pick a random text 20%
         if random.random() >= 0.20:
+            keywords = title.lower().split(" ")
             possible_reply_dict = {}        
-            for r in replies:
+            for r in self.replies:
                 for k in keywords:
                     if k in r.lower():
                         try:
@@ -58,26 +62,32 @@ class AbstractAhbapBot():
                             possible_reply_dict[r] = 1
             if not len(possible_reply_dict) == 0:
                 sorted_reply_dict = {k: v for k, v in sorted(possible_reply_dict.items(), reverse=True, key=lambda item: item[1])}
-
-                # pick randomly from first quarter
-                rnd_index = int(len(sorted_reply_dict) / 4)
-                return list(sorted_reply_dict.keys())[random.randint(0, rnd_index)]
+                # pick randomly from first top 60%
+                rnd_index = int(len(sorted_reply_dict) / 1.6)
+                random_reply = list(sorted_reply_dict.keys())[random.randint(0, rnd_index)].replace("<bs>","\n")
+                return random_reply
         # pick a random one    
-        random_reply = random.choice(replies)
+        random_reply = random.choice(self.replies).replace("<bs>","\n")
         return random_reply
 
 
-    def add_to_replied(id):
+    def add_to_replied(self, id):
         self.replied_ids.append(id)
-        self.replied_ids_file.write(id)
+
+        self.replied_ids_file = codecs.open("replied_ids.txt", "a", "utf-8")
+        self.replied_ids_file.write(f"{id}\n")
+        self.replied_ids_file.close()
 
 
     def log_reply(self, submission, reply):
         print(f"replied to {submission.title}")
-        self.log_file.write(f"title : {submission.title} , timestamp : {submission.created}")
-        self.log_file.write(f"url : {'https://reddit.com' + submission.permalink}")
+
+        self.log_file = codecs.open("log.txt", "a", "utf-8")
+        self.log_file.write(f"title : {submission.title} , timestamp : {submission.created}\n")
+        self.log_file.write(f"url : {'https://reddit.com' + submission.permalink}\n")
         self.log_file.write(f"reply : {reply}")
-        self.log_file.write("==================")
+        self.log_file.write("==================\n")
+        self.log_file.close()
 
 if __name__ == "__main__":
     bot = AbstractAhbapBot()
