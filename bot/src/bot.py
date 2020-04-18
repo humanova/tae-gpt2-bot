@@ -13,7 +13,7 @@ class AbstractAhbapBot():
         self.reply_file = codecs.open("tae_generated_text.txt", "r", "utf-8")
         self.replied_ids_file = codecs.open("replied_ids.txt", "r", "utf-8")
 
-        self.replied_ids = self.replied_ids_file.readlines()
+        self.replied_ids = [id.replace("\n", "") for in self.replied_ids_file.readlines()]
         self.replies = self.reply_file.readlines()
         
         self.replied_ids_file.close()
@@ -30,7 +30,7 @@ class AbstractAhbapBot():
     
     def start(self):
         '''
-        if len(replied_ids) == 0:
+        if len(self.replied_ids) == 0:
             exit()
         '''
         for submission in self.subreddit.stream.submissions():
@@ -41,6 +41,7 @@ class AbstractAhbapBot():
                     try:
                         submission.reply(gen_text)
                     except praw.exceptions.APIException:
+                        print("sleeping 5 minutes due to ratelimit")
                         time.sleep(300)
                         submission.reply(gen_text)
 
@@ -48,7 +49,7 @@ class AbstractAhbapBot():
                     self.add_to_replied(submission.id)
                     self.log_reply(submission, gen_text)
 
-                    time.sleep(900)
+                    time.sleep(random.randint(300, 550))
             
 
 
