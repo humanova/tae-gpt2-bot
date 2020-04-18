@@ -42,7 +42,7 @@ class AbstractAhbapBot():
                     # logging stuff
                     self.add_to_replied(submission.id)
                     self.log_reply(submission, gen_text)
-                    
+
                     time.sleep(900)
             
 
@@ -81,7 +81,7 @@ class AbstractAhbapBot():
 
 
     def log_reply(self, submission, reply):
-        print(f"replied to {submission.title}")
+        print(f"replied to {submission.id} from u/{submission.author.name}")
 
         self.log_file = codecs.open("log.txt", "a", "utf-8")
         self.log_file.write(f"title : {submission.title} , timestamp : {submission.created}\n")
