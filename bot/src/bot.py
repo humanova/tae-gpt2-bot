@@ -57,7 +57,7 @@ class AbstractAhbapBot():
                         self.log_reply(submission, gen_text)
                         
                         # if it's night sleep longer to look like a "human redditor"
-                        if time.time() >= time(2,00) or time.time() <= time(8,00):
+                        if time.localtime().tm_hour >= 2 or time.localtime().tm_hour <= 9:
                             time.sleep(21600) # 6 hours
                         else:
                             time.sleep(random.randint(200, 400))
