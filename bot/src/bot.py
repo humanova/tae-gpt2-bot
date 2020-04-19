@@ -7,7 +7,7 @@ import confparser
 class AbstractAhbapBot():
     
     def __init__(self):
-        self.sub_list [
+        self.sub_list = [
             "tamamahbapengelli",
             "turkishbruhmemes",
             "shitposttc"
