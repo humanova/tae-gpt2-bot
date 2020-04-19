@@ -10,9 +10,7 @@ if __name__ == "__main__":
     
     comments = []
     for c in data:
-        comments.append(c["text"].strip().replace("\n", " "))
-      
-    print(comments[7])
+        comments.append(c["text"].strip().replace("\n", "<bs>"))
     
     df = pd.DataFrame(comments)
     df.to_csv(f"{f_name}.csv", index=False)

@@ -8,7 +8,9 @@ class AbstractAhbapBot():
     
     def __init__(self):
         self.sub = "tamamahbapengelli"
-        self.start_timestamp = 1586786823.0
+        self.day_delta = 5
+        self.start_timestamp = time.time() - (86400 * self.day_delta)
+        self.min_score = 5
         self.config = confparser.get("config.json")
         self.reply_file = codecs.open("tae_generated_text.txt", "r", "utf-8")
         self.replied_ids_file = codecs.open("replied_ids.txt", "r", "utf-8")
@@ -36,20 +38,21 @@ class AbstractAhbapBot():
         for submission in self.subreddit.stream.submissions():
             if not submission.id in self.replied_ids:
                 if submission.created > self.start_timestamp:
-                    gen_text = self.find_reply(submission.title)
-                    
-                    try:
-                        submission.reply(gen_text)
-                    except praw.exceptions.APIException:
-                        print("sleeping 5 minutes due to ratelimit")
-                        time.sleep(300)
-                        submission.reply(gen_text)
+                    if submission.score > self.min_score:
+                        gen_text = self.find_reply(submission.title)
+                        
+                        try:
+                            submission.reply(gen_text)
+                        except praw.exceptions.APIException:
+                            print("sleeping 5 minutes due to ratelimit")
+                            time.sleep(300)
+                            submission.reply(gen_text)
 
-                    # logging stuff
-                    self.add_to_replied(submission.id)
-                    self.log_reply(submission, gen_text)
+                        # logging stuff
+                        self.add_to_replied(submission.id)
+                        self.log_reply(submission, gen_text)
 
-                    time.sleep(random.randint(300, 550))
+                        time.sleep(random.randint(200, 400))
             
 
 
