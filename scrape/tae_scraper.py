@@ -15,6 +15,8 @@ word_filters = [
     "[silindi]",
     "u/vreddit",
     "r/vreddit"
+    "sans",
+    "admin",
     "abece",
     "http",
     "masterpiece"

@@ -7,10 +7,14 @@ import confparser
 class AbstractAhbapBot():
     
     def __init__(self):
-        self.sub = "tamamahbapengelli"
-        self.day_delta = 5
+        self.sub_list [
+            "tamamahbapengelli",
+            "turkishbruhmemes",
+            "shitposttc"
+        ] 
+        self.day_delta = 1
         self.start_timestamp = time.time() - (86400 * self.day_delta)
-        self.min_score = 5
+        self.min_score = -1
         self.config = confparser.get("config.json")
         self.reply_file = codecs.open("tae_generated_text.txt", "r", "utf-8")
         self.replied_ids_file = codecs.open("replied_ids.txt", "r", "utf-8")
@@ -27,7 +31,7 @@ class AbstractAhbapBot():
                                     user_agent=self.config.reddit_useragent,
                                     username=self.config.reddit_username)
         
-        self.subreddit = self.reddit.subreddit(self.sub)
+        self.subreddit = self.reddit.subreddit("+".join(self.sub_list))
 
     
     def start(self):
@@ -51,8 +55,12 @@ class AbstractAhbapBot():
                         # logging stuff
                         self.add_to_replied(submission.id)
                         self.log_reply(submission, gen_text)
-
-                        time.sleep(random.randint(200, 400))
+                        
+                        # if it's night sleep longer to look like a "human redditor"
+                        if time.time() >= time(2,00) or time.time() <= time(8,00):
+                            time.sleep(21600) # 6 hours
+                        else:
+                            time.sleep(random.randint(200, 400))
             
 
 
