@@ -43,8 +43,9 @@ class AbstractAhbapBot():
             if not submission.id in self.replied_ids:
                 if submission.created > self.start_timestamp:
                     if submission.score > self.min_score:
+                        # sleep before replying
+                        time.sleep(random.randint(300, 600))
                         gen_text = self.find_reply(submission.title)
-                        
                         try:
                             submission.reply(gen_text)
                         except praw.exceptions.APIException:
