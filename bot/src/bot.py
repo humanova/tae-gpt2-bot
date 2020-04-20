@@ -60,7 +60,7 @@ class AbstractAhbapBot():
                         if time.localtime().tm_hour >= 2 or time.localtime().tm_hour <= 9:
                             time.sleep(21600) # 6 hours
                         else:
-                            time.sleep(random.randint(200, 400))
+                            time.sleep(random.randint(400, 900))
             
 
 
