@@ -44,7 +44,7 @@ class AbstractAhbapBot():
                 if submission.created > self.start_timestamp:
                     if submission.score > self.min_score:
                         # sleep before replying
-                        time.sleep(random.randint(4800, 9.600‬))
+                        time.sleep(random.randint(1000, 1500))
                         gen_text = self.find_reply(submission.title)
                         try:
                             submission.reply(gen_text)
