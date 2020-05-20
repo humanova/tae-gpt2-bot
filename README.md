@@ -15,3 +15,6 @@ Scraped over 3000 comments from r/tae subreddit, filtered them and created a dat
 Spent 2 days training/finetuning the model to make it generate better comments (it wasn't very effective). 
 
 Finished writing the bot and made it comment under posts looking as humanly as possible by combining GPT-2 generated text with a human-like bot behaviour (sleeping at night, not commenting to a new post immediatly etc.).
+
+## Notes
+Scraped and generated data contains many Turkish and English swearwords (including racist ones). Be cautious if you want to use them. 
