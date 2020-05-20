@@ -1,3 +1,5 @@
+# 2020 Emir Erbasan (humanova)
+# MIT License, see LICENSE for more details
 import praw
 import confparser
 
@@ -6,7 +8,7 @@ class CommentScraper:
     def __init__(self, subreddit: str, limit: int):
         self.sub = subreddit
         self.limit = limit
-        self.config = confparser.get("config.json")
+        self.config = confparser.get("../config.json")
 
         self.reddit = praw.Reddit(client_id=self.config.reddit_id,
                                     client_secret=self.config.reddit_secret,

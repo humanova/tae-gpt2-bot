@@ -1,8 +1,13 @@
+# 2020 Emir Erbasan (humanova)
+# MIT License, see LICENSE for more details
 import praw
 import time
 import codecs
+import requests
 import random
 import confparser
+
+API_URL = None 
 
 class AbstractAhbapBot():
     
@@ -13,9 +18,9 @@ class AbstractAhbapBot():
             "shitposttc"
         ] 
         self.day_delta = 1
-        self.start_timestamp = time.time() - (86400 * self.day_delta)
         self.min_score = -1
-        self.config = confparser.get("config.json")
+        self.start_timestamp = time.time() - (86400 * self.day_delta)
+        self.config = confparser.get("../config.json")
         self.reply_file = codecs.open("tae_generated_text.txt", "r", "utf-8")
         self.replied_ids_file = codecs.open("replied_ids.txt", "r", "utf-8")
 
@@ -33,12 +38,11 @@ class AbstractAhbapBot():
         
         self.subreddit = self.reddit.subreddit("+".join(self.sub_list))
 
-    
     def start(self):
-        
+        '''
         if len(self.replied_ids) == 0:
             exit()
-        
+        '''
         for submission in self.subreddit.stream.submissions():
             if not submission.id in self.replied_ids:
                 if submission.created > self.start_timestamp:
@@ -63,9 +67,18 @@ class AbstractAhbapBot():
                         else:
                             time.sleep(random.randint(400, 900))
             
-
-
     def find_reply(self, title):
+        # use API to generate reply IF defined
+        if API_URL:
+            content = {"title" : title}
+            try:
+                r = requests.post(f"{API_URL}/gen_reply", timeout=4.0, json=content)
+                data = r.json()
+                if data['success']:
+                    reply = data['reply'].replace("<bs>", '\n')
+                    return reply
+            except Exception as e:
+                print(f"error in /gen_reply request : {e}")
 
         # pick a related text 80%
         # pick a random text 20%
@@ -89,14 +102,12 @@ class AbstractAhbapBot():
         random_reply = random.choice(self.replies).replace("<bs>","\n")
         return random_reply
 
-
     def add_to_replied(self, id):
         self.replied_ids.append(id)
 
         self.replied_ids_file = codecs.open("replied_ids.txt", "a", "utf-8")
         self.replied_ids_file.write(f"{id}\n")
         self.replied_ids_file.close()
-
 
     def log_reply(self, submission, reply):
         print(f"replied to {submission.id} from u/{submission.author.name}")
@@ -108,8 +119,8 @@ class AbstractAhbapBot():
         self.log_file.write("==================\n")
         self.log_file.close()
 
+
 if __name__ == "__main__":
     bot = AbstractAhbapBot()
     bot.start()
-
     print("bot stopped")

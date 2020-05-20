@@ -8,9 +8,9 @@ def conv(file):
         comment_data = f.readlines()
 
     with codecs.open(f"{file}.csv", 'w', encoding="utf-8") as f:
-      wr = csv.writer(f)
-      wr.writerow(("comment"))
-      wr.writerows(comment_data)
+        wr = csv.writer(f)
+        wr.writerow(("comment"))
+        wr.writerows(comment_data)
     f.close()
 
 def convert(file):

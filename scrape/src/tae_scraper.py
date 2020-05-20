@@ -1,3 +1,5 @@
+# 2020 Emir Erbasan (humanova)
+# MIT License, see LICENSE for more details
 from scraper import CommentScraper
 import codecs
 import json 
@@ -19,12 +21,9 @@ word_filters = [
     "admin",
     "abece",
     "http",
-    "masterpiece"
-
-]
+    "masterpiece"]
 
 if __name__ == "__main__":
-    
     s = CommentScraper(SUBREDDIT, 10000)
     data = s.get_comments()
     
@@ -36,7 +35,5 @@ if __name__ == "__main__":
 
     with codecs.open(f"comments_{SUBREDDIT}.json", "w", "utf-8") as json_file:
         json.dump(final_comments, json_file, ensure_ascii=False)
-
-
 
     print(f"comment count : {len(final_comments)}")
