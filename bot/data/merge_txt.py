@@ -1,3 +1,5 @@
+# 2020 Emir Erbasan (humanova)
+# MIT License, see LICENSE for more details
 import codecs
 import glob
 import sys
